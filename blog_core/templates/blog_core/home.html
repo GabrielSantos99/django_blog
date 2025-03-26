@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Posts do Blog</h1>
+    <ul>
+        {% for post in posts %}
+        <li>
+            <h2><a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a></h2>
+            <p>{{ post.content|truncatewords:30 }}</p>
+            <p><strong>Publicado em:</strong> {{ post.published_at }}</p>
+        </li>
+        {% empty %}
+        <li>Não há posts publicados no momento.</li>
+        {% endfor %}
+    </ul>
+{% endblock %}
