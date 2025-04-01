@@ -8,6 +8,11 @@
     <title>Blog</title>
 </head>
 <body>
+    <ul>
+        {% for category in categories %}
+            <li><a href="{% url 'category_list' slug=category.slug %}">{{ category.name }}</a></li>
+        {% endfor %}
+    </ul>
     {% block content%}
     {% endblock %}
 </body>
