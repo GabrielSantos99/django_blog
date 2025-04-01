@@ -4,13 +4,28 @@
     <h1>Posts do Blog</h1>
     <ul>
         {% for post in posts %}
-        <li>
-            <h2><a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a></h2>
-            <p>{{ post.content|truncatewords:30 }}</p>
-            <p><strong>Publicado em:</strong> {{ post.published_at }}</p>
-        </li>
+            <h2>{{ post.title }}</h2>
+            <p>{{ post.summary }}</p>
+            <a href="{% url 'post_detail' post.pk %}">Leia mais</a>
         {% empty %}
-        <li>Não há posts publicados no momento.</li>
+            <p>Não há posts disponíveis.</p>
         {% endfor %}
+            
+        <footer>
+        <!-- Paginação -->
+        <div class="pagination">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">Primeira</a>
+                <a href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+            {% endif %}
+        
+            <span>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+        
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">Próxima</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">Última</a>
+            {% endif %}
+        </div>
+    </footer>
     </ul>
 {% endblock %}
