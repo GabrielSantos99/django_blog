@@ -1,7 +1,10 @@
-from django.shortcuts import get_object_or_404
-from .models import Post, Category
+from django.shortcuts import get_object_or_404, redirect
 from django.views.generic import ListView, DetailView
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from .models import Post, Category, Comment
 from .mixin import DraftDispatchMixin
+from .forms import CommentForm
 
 class HomeView(ListView):
     model = Post
@@ -17,6 +20,24 @@ class PostDetailView(DraftDispatchMixin, DetailView):
 
     def get_queryset(self):
         return Post.objects.filter(status='published')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['comment_form'] = CommentForm()
+        context['comments'] = self.object.comments.all().order_by('-pub_date')
+        return context
+    
+    @method_decorator(login_required)
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post = self.object
+            comment.author = request.user
+            comment.save()
+            return redirect(self.object.get_absolute_url())
+        return self.get(request, *args, **kwargs)
 
 class CategoryListView(ListView):
     model = Post

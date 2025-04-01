@@ -5,4 +5,30 @@
     <p><strong>Autor:</strong> {{ post.author }}</p>
     <p><strong>Publicado em:</strong> {{ post.published_at }}</p>
     <p>{{ post.content }}</p>
+
+    <h2>Comentários</h2>
+
+    {% if comments %}
+        <ul>
+            {% for comment in comments %}
+                <li>
+                    <strong>{{ comment.author.username }}</strong> em {{ comment.pub_date|date:"d/m/Y H:i" }}  
+                    <p>{{ comment.content }}</p>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Seja o primeiro a comentar!</p>
+    {% endif %}
+
+    {% if user.is_authenticated %}
+        <h3>Deixe um Comentário</h3>
+        <form method="post">
+            {% csrf_token %}
+            {{ comment_form.as_p }}
+            <button type="submit">Comentar</button>
+        </form>
+    {% else %}
+        <p><a href="{% url 'login' %}">Faça login</a> para comentar.</p>
+    {% endif %}
 {% endblock %}
