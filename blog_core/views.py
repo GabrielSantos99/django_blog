@@ -1,7 +1,9 @@
 from django.shortcuts import get_object_or_404, redirect
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, CreateView
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+from django.contrib.auth.forms import UserCreationForm
+from django.urls import reverse_lazy
 from .models import Post, Category, Comment
 from .mixin import DraftDispatchMixin
 from .forms import CommentForm
@@ -52,3 +54,8 @@ class CategoryListView(ListView):
         context = super().get_context_data(**kwargs)
         context['categories'] = self.categories
         return context
+    
+class RegisterView(CreateView):
+    form_class = UserCreationForm
+    template_name = 'users/register.html'
+    success_url = reverse_lazy('login')

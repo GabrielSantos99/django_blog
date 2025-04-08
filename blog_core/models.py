@@ -57,3 +57,10 @@ class Comment(models.Model):
     def __str__(self):
         return f"Comentário de {self.author} em {self.post.title}"
     
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    bio = models.CharField(max_length=300, blank=True)
+    photo = models.ImageField(upload_to='profile_pics/', blank=True)
+
+    def __str__(self):
+        return f'Perfil de {self.user}'

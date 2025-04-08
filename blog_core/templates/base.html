@@ -13,6 +13,18 @@
             <li><a href="{% url 'category_list' slug=category.slug %}">{{ category.name }}</a></li>
         {% endfor %}
     </ul>
+    {% if user.is_authenticated %}
+        <p>
+            Olá, {{ user.username }} |
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit">Logout</button>
+            </form>
+        </p>
+    {% else %}
+        <p><a href="{% url 'login' %}">Login</a> | <a href="{% url 'register' %}">Registrar</a></p>
+    {% endif %}
+
     {% block content%}
     {% endblock %}
 </body>
